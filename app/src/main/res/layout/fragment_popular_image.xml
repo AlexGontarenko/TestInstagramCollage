@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridView
+            android:id="@+id/grid_image_view_popularimage_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="auto_fit"
+            android:columnWidth="70dp"
+            android:listSelector="@android:color/transparent"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="5dp"
+            android:gravity="center"
+            android:clickable="true"
+
+            />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/notdata_label_popularimage_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aaaaaaaa"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/not_found_data"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/loading_label_popularimage_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aaaaaaaa">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/loading"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"/>
+
+    </FrameLayout>
+
+</FrameLayout>
