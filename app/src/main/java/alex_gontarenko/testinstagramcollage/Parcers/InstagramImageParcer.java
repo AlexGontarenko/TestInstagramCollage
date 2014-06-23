@@ -12,24 +12,25 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImage;
+import alex_gontarenko.testinstagramcollage.BaseClass.InstagramMediaImage;
 
 /**
  * Created by Alex on 22.06.2014.
  */
-public class InstagramImageParcer extends InstagramDataParser<ArrayList<InstagramImage>> {
+public class InstagramImageParcer extends InstagramDataParser<ArrayList<InstagramMediaImage>> {
     private final static String LOG_TAG = "InstagramImageParcer";
 
 
     @Override
-    public ArrayList<InstagramImage> parceData(InputStream is) {
-        ArrayList<InstagramImage> arrayImage = null;
+    public ArrayList<InstagramMediaImage> parceData(InputStream is) {
+        ArrayList<InstagramMediaImage> arrayImage = null;
         String response = null;
         JSONObject objectJSON=null,object=null,imgObject;
         JSONArray arrayJSON = null;
         int i,size;
 
         int likes;
-        String thumbnailUrl,imageURL;
+        InstagramImage thumbnailImg,image;
 
         try {
             response = streamToString(is);
@@ -38,38 +39,47 @@ public class InstagramImageParcer extends InstagramDataParser<ArrayList<Instagra
                 arrayJSON = (new JSONObject(response)).getJSONArray("data");
                 if(arrayJSON!=null&&arrayJSON.length()>0){
                     size=arrayJSON.length();
-                    arrayImage = new ArrayList<InstagramImage>(size);
+                    arrayImage = new ArrayList<InstagramMediaImage>(size);
                     for (i=0;i<size;i++){
                         objectJSON = arrayJSON.getJSONObject(i);
-                        if(objectJSON!=null&&objectJSON.has("type")&&objectJSON.getString("type").equals("image")){
-                            likes=-1;
-                            thumbnailUrl=null;
-                            imageURL=null;
-                            if(objectJSON.has("likes")) {
-                                object = objectJSON.getJSONObject("likes");
-                                if(object.has("count"))
-                                    likes=object.getInt("count");
-                            }
-                            if(objectJSON.has("images")) {
-                                object = objectJSON.getJSONObject("images");
-                                if(object.has("thumbnail")) {
-                                    imgObject=object.getJSONObject("thumbnail");
-                                    if (imgObject.has("url"))
-                                        thumbnailUrl = imgObject.getString("url");
-                                }
-                                if(object.has("standard_resolution")) {
-                                    imgObject=object.getJSONObject("standard_resolution");
-                                    if (imgObject.has("url"))
-                                        imageURL = imgObject.getString("url");
-                                }
-                            }
+                        if(objectJSON==null||!(objectJSON.has("type"))||!(objectJSON.getString("type").equals("image")))
+                            continue;
+                        likes=-1;
+                        thumbnailImg=null;
+                        image=null;
 
-                            if(likes>-1&&thumbnailUrl!=null&&!thumbnailUrl.isEmpty()&&imageURL!=null&&!imageURL.isEmpty())
-                                arrayImage.add(new InstagramImage(imageURL,thumbnailUrl,likes));
+                        //get likes
+                        if(!objectJSON.has("likes")) continue;
+                        object = objectJSON.getJSONObject("likes");
+
+                        if(!object.has("count")) continue;
+                        likes=object.getInt("count");
+
+                        //get images
+                        if(!objectJSON.has("images")) continue;
+                        object = objectJSON.getJSONObject("images");
+
+                        //get thumbnail
+                        if(!object.has("thumbnail")) continue;
+                        imgObject=object.getJSONObject("thumbnail");
+
+                        if (imgObject.has("url")&&imgObject.has("width")&&imgObject.has("height")) {
+                            thumbnailImg = new InstagramImage(imgObject.getString("url"),imgObject.getInt("width"),imgObject.getInt("height"));
+                        } else continue;
+
+                        //get standart image
+                        if(!object.has("standard_resolution")) continue;
+                        imgObject=object.getJSONObject("standard_resolution");
+
+                        if (imgObject.has("url")&&imgObject.has("width")&&imgObject.has("height")) {
+                            image = new InstagramImage(imgObject.getString("url"),imgObject.getInt("width"),imgObject.getInt("height"));
+                        } else continue;
+
+                        arrayImage.add(new InstagramMediaImage(image,thumbnailImg,likes));
                         }
                     }
 
-                }
+
             }
         }catch (IOException e) {
             Log.e(LOG_TAG, e.toString());

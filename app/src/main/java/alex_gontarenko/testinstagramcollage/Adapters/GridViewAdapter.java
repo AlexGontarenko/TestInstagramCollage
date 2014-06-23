@@ -4,15 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 
+import alex_gontarenko.testinstagramcollage.BaseClass.ImagePick;
 import alex_gontarenko.testinstagramcollage.BaseClass.ImagePickerInstagram;
-import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImage;
-import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImagePick;
+import alex_gontarenko.testinstagramcollage.BaseClass.InstagramMediaImage;
 import alex_gontarenko.testinstagramcollage.Loaders.ImageLoader;
 import alex_gontarenko.testinstagramcollage.R;
 
@@ -24,7 +22,7 @@ public class GridViewAdapter extends BaseAdapter{
 
     private LayoutInflater _inflater;
 
-    private ArrayList<InstagramImagePick> _array;
+    private ArrayList<ImagePick> _array;
 
     public GridViewAdapter(Context context) {
         _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -37,19 +35,19 @@ public class GridViewAdapter extends BaseAdapter{
         return 0;
     }
 
-    public ArrayList<InstagramImagePick> getArray(){
+    public ArrayList<ImagePick> getArray(){
         return _array;
     }
 
-    public void setArray(ArrayList<InstagramImage> array){
+    public void setArray(ArrayList<InstagramMediaImage> array){
         if(_array!=null)
             _array.clear();
         int i,size;
         if(array!=null&&!array.isEmpty()) {
             size = array.size();
-            _array = new ArrayList<InstagramImagePick>(array.size());
+            _array = new ArrayList<ImagePick>(array.size());
             for (i=0;i<size;i++)
-                _array.add(new InstagramImagePick(array.get(i)));
+                _array.add(new ImagePick(array.get(i)));
         }
         notifyDataSetChanged();
     }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +17,7 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import alex_gontarenko.testinstagramcollage.Adapters.GridViewAdapter;
-import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImage;
+import alex_gontarenko.testinstagramcollage.BaseClass.InstagramMediaImage;
 import alex_gontarenko.testinstagramcollage.Instagram.InstagramAPI;
 import alex_gontarenko.testinstagramcollage.Listners.LogoutListner;
 import alex_gontarenko.testinstagramcollage.Loaders.PopularImageLoader;
@@ -27,7 +26,7 @@ import alex_gontarenko.testinstagramcollage.R;
 /**
  * Created by Alex on 22.06.2014.
  */
-public class FragmentPopularImages extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<InstagramImage>>{
+public class FragmentPopularImages extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<InstagramMediaImage>>{
 
     public final static String TOKEN_TAG = "FragmentPopularImages_TOKEN_TAG";
     public final static String USER_ID_TAG = "FragmentPopularImages_USER_ID_TAG";
@@ -82,7 +81,7 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
         _adapter.clear();
         Bundle bndl = new Bundle();
         bndl.putString(PopularImageLoader.TAG_URL, InstagramAPI.getURLMediaDataUser(_token,_userId));
-        Loader<ArrayList<InstagramImage>> loader = getLoaderManager().restartLoader(POPULAR_IMAGE_LOADER_ID, bndl, this);
+        Loader<ArrayList<InstagramMediaImage>> loader = getLoaderManager().restartLoader(POPULAR_IMAGE_LOADER_ID, bndl, this);
         loader.forceLoad();
         _progressDialog.setVisibility(View.VISIBLE);
         _messageFound.setVisibility(View.GONE);
@@ -96,10 +95,10 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
     }
 
     @Override
-    public Loader<ArrayList<InstagramImage>> onCreateLoader(int id, Bundle args) {
-        Loader<ArrayList<InstagramImage>> loader = null;
+    public Loader<ArrayList<InstagramMediaImage>> onCreateLoader(int id, Bundle args) {
+        Loader<ArrayList<InstagramMediaImage>> loader = null;
         if (id == POPULAR_IMAGE_LOADER_ID) {
-            args.putString(PopularImageLoader.TAG_URL,InstagramAPI.getURLMediaDataUser(_token,_userId));
+            args.putString(PopularImageLoader.TAG_URL,InstagramAPI.getURLMediaDataUser(_token,_userId,100));
             loader = new PopularImageLoader(getActivity().getApplicationContext(), args);
         }
         return loader;
@@ -108,20 +107,13 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
 
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<InstagramImage>> loader) {
+    public void onLoaderReset(Loader<ArrayList<InstagramMediaImage>> loader) {
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<InstagramImage>> loader, ArrayList<InstagramImage> data) {
-        ArrayList<InstagramImage> arrayList = null;
+    public void onLoadFinished(Loader<ArrayList<InstagramMediaImage>> loader, ArrayList<InstagramMediaImage> data) {
         if(data!=null&&data.size()>0){
-            if(data.size()>40){
-                arrayList = new ArrayList<InstagramImage>(40);
-                for(int i=0;i<40;i++)
-                    arrayList.add(data.get(i));
-            } else
-                arrayList = data;
-            _adapter.setArray(arrayList);
+            _adapter.setArray(data);
             _progressDialog.setVisibility(View.GONE);
             _messageFound.setVisibility(View.GONE);
         } else {

@@ -1,41 +1,46 @@
 package alex_gontarenko.testinstagramcollage.BaseClass;
 
 /**
- * Created by Alex on 22.06.2014.
+ * Created by Alex on 23.06.2014.
  */
 public class InstagramImage {
 
-    private String _imgURLThumbnail;
-    private String _imgURL;
-    private int _likes;
+    private String _URL;
+    private int _width,_height;
 
-    public InstagramImage(String imgURL, String imgURLThumbnail,int likes){
-        _imgURL = imgURL;
-        _imgURLThumbnail =imgURLThumbnail;
-        _likes=likes;
+    public InstagramImage(){
+        _URL=null;
+        _width=-1;
+        _height=-1;
     }
 
-    public int getLikes(){
-        return _likes;
+    public InstagramImage(String url,int width,int height){
+        _URL=url;
+        _width=width;
+        _height=height;
     }
 
-    public void setLikes(int likes){
-        _likes=likes;
+    public String getURL(){
+        return _URL;
     }
 
-    public String getImgURLThumbnail(){
-        return _imgURLThumbnail;
+    public void setURL(String url){
+        _URL=url;
     }
 
-    public void setImgURLThumbnail(String imgURL){
-        _imgURLThumbnail =imgURL;
+    public int getWidth(){
+        return _width;
     }
 
-    public String getImgURL(){
-        return _imgURL;
+    public void setWidth(int width){
+        _width=width;
     }
 
-    public void setImgURL(String imgURL){
-        _imgURL=imgURL;
+    public int getHeight(){
+        return _height;
+    }
+
+    public void setHeight(int height){
+        _height=height;
     }
 }

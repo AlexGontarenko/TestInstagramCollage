@@ -13,13 +13,13 @@ import java.util.Comparator;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImage;
+import alex_gontarenko.testinstagramcollage.BaseClass.InstagramMediaImage;
 import alex_gontarenko.testinstagramcollage.Parcers.InstagramImageParcer;
 
 /**
  * Created by Alex on 22.06.2014.
  */
-public class PopularImageLoader extends Loader<ArrayList<InstagramImage>> {
+public class PopularImageLoader extends Loader<ArrayList<InstagramMediaImage>> {
 
     private static final String LOG_TAG = "PopularImageLoader";
     public static final String TAG_URL = "PopularImageLoader_URL";
@@ -70,11 +70,11 @@ public class PopularImageLoader extends Loader<ArrayList<InstagramImage>> {
         Log.d(LOG_TAG, hashCode() + " onReset");
     }
 
-    class PopularImageAsyncTask extends AsyncTask<String, Void, ArrayList<InstagramImage>> {
+    class PopularImageAsyncTask extends AsyncTask<String, Void, ArrayList<InstagramMediaImage>> {
         @Override
-        protected ArrayList<InstagramImage> doInBackground(String... params) {
+        protected ArrayList<InstagramMediaImage> doInBackground(String... params) {
             HttpsURLConnection httpsURLConnection = null;
-            ArrayList<InstagramImage> array=null;
+            ArrayList<InstagramMediaImage> array=null;
             String linkUrl = params[0];
             if(linkUrl!=null&&!linkUrl.isEmpty()) {
 
@@ -95,10 +95,10 @@ public class PopularImageLoader extends Loader<ArrayList<InstagramImage>> {
                         httpsURLConnection.disconnect();
                 }
             }
-            if(array!=null&&array.size()>40)
-                Collections.sort(array, new Comparator<InstagramImage>() {
+            if(array!=null&&!array.isEmpty())
+                Collections.sort(array, new Comparator<InstagramMediaImage>() {
                     @Override
-                    public int compare(InstagramImage l, InstagramImage r) {
+                    public int compare(InstagramMediaImage l, InstagramMediaImage r) {
                         return r.getLikes()-l.getLikes();
                     }
                 });
@@ -106,7 +106,7 @@ public class PopularImageLoader extends Loader<ArrayList<InstagramImage>> {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<InstagramImage> result) {
+        protected void onPostExecute(ArrayList<InstagramMediaImage> result) {
             super.onPostExecute(result);
             deliverResult(result);
 

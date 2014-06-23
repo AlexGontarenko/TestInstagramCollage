@@ -98,4 +98,16 @@ public class InstagramAPI {
         buffer.append(token);
         return buffer.toString();
     }
+
+    public static String getURLMediaDataUser(String token,String user_id,int count){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(API_URL);
+        buffer.append("/users/");
+        buffer.append(user_id);
+        buffer.append("/media/recent/?access_token=");
+        buffer.append(token);
+        buffer.append("&count=");
+        buffer.append(count);
+        return buffer.toString();
+    }
 }
