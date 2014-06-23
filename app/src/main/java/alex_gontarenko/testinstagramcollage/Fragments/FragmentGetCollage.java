@@ -194,7 +194,6 @@ public class FragmentGetCollage extends Fragment implements View.OnClickListener
             if(!isCancelled()){
                 _progressDialog.setVisibility(View.GONE);
                 if(result!=null&&!result.isEmpty()) {
-                    _messageView.setText(result);
                     if(_onCompleteListner!=null)
                         _onCompleteListner.onComplete(_token,result);
                 } else

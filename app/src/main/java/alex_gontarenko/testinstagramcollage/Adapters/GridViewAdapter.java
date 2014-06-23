@@ -23,9 +23,15 @@ public class GridViewAdapter extends BaseAdapter{
     private LayoutInflater _inflater;
 
     private ArrayList<ImagePick> _array;
+    private int _countPickImage;
 
     public GridViewAdapter(Context context) {
         _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        _countPickImage=0;
+    }
+
+    public int getCountPickImage() {
+        return _countPickImage;
     }
 
     @Override
@@ -42,6 +48,7 @@ public class GridViewAdapter extends BaseAdapter{
     public void setArray(ArrayList<InstagramMediaImage> array){
         if(_array!=null)
             _array.clear();
+        _countPickImage=0;
         int i,size;
         if(array!=null&&!array.isEmpty()) {
             size = array.size();
@@ -55,6 +62,7 @@ public class GridViewAdapter extends BaseAdapter{
     public void clear(){
         if(_array!=null)
             _array.clear();
+        _countPickImage=0;
         notifyDataSetChanged();
     }
 
@@ -80,6 +88,7 @@ public class GridViewAdapter extends BaseAdapter{
             public void onPickImage(boolean pick) {
                 final int pos = position;
                 _array.get(pos).setPick(pick);
+                _countPickImage+=(pick?1:-1);
             }
         });
         return image;

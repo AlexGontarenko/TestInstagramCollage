@@ -10,6 +10,8 @@
     <string name="label_nick">Nickname:</string>
     <string name="button_getcollage">Давай Collage</string>
 
+    <string name="button_createcollage">Создать Collage</string>
+
     <string name="label_email">E-mail:</string>
 
     <string name="action_settings">Settings</string>

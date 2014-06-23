@@ -36,7 +36,7 @@ public class InstagramImageParcer extends InstagramDataParser<ArrayList<Instagra
             response = streamToString(is);
             objectJSON = new JSONObject(response);
             if(objectJSON!=null&&objectJSON.has("data")){
-                arrayJSON = (new JSONObject(response)).getJSONArray("data");
+                arrayJSON = objectJSON.getJSONArray("data");
                 if(arrayJSON!=null&&arrayJSON.length()>0){
                     size=arrayJSON.length();
                     arrayImage = new ArrayList<InstagramMediaImage>(size);

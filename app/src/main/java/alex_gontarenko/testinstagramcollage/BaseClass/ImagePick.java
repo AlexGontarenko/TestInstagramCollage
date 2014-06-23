@@ -9,6 +9,7 @@ public class ImagePick extends InstagramMediaImage {
 
     public ImagePick(InstagramMediaImage image) {
         super(image.getInstagramImage(), image.getInstagramImageThumbnail(), image.getLikes());
+        _isPick=false;
     }
 
     public boolean isPick(){

@@ -4,14 +4,20 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/grid_image_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
 
         <GridView
             android:id="@+id/grid_image_view_popularimage_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
             android:numColumns="auto_fit"
             android:columnWidth="70dp"
             android:listSelector="@android:color/transparent"
@@ -19,10 +25,18 @@
             android:verticalSpacing="5dp"
             android:gravity="center"
             android:clickable="true"
-
             />
 
-    </FrameLayout>
+        <Button
+            android:id="@+id/button_create_collage_popularimage_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:text="@string/button_createcollage"
+            />
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/notdata_label_popularimage_fragment"
@@ -44,7 +58,8 @@
         android:id="@+id/loading_label_popularimage_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#aaaaaaaa">
+        android:background="#aaaaaaaa"
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

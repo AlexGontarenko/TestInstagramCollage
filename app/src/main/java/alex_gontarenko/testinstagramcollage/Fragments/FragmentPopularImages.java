@@ -10,13 +10,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 
 import alex_gontarenko.testinstagramcollage.Adapters.GridViewAdapter;
+import alex_gontarenko.testinstagramcollage.BaseClass.ImageListConverter;
 import alex_gontarenko.testinstagramcollage.BaseClass.InstagramMediaImage;
 import alex_gontarenko.testinstagramcollage.Instagram.InstagramAPI;
 import alex_gontarenko.testinstagramcollage.Listners.LogoutListner;
@@ -26,7 +30,7 @@ import alex_gontarenko.testinstagramcollage.R;
 /**
  * Created by Alex on 22.06.2014.
  */
-public class FragmentPopularImages extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<InstagramMediaImage>>{
+public class FragmentPopularImages extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<InstagramMediaImage>>,View.OnClickListener{
 
     public final static String TOKEN_TAG = "FragmentPopularImages_TOKEN_TAG";
     public final static String USER_ID_TAG = "FragmentPopularImages_USER_ID_TAG";
@@ -36,6 +40,7 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
     private LogoutListner _logoutListner;
 
     private FrameLayout _progressDialog, _messageFound;
+    private LinearLayout _gridContainer;
     private GridView _gridImageView;
     private GridViewAdapter _adapter;
 
@@ -69,9 +74,12 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
         View rootView = inflater.inflate(R.layout.fragment_popular_image, container, false);
         _progressDialog = (FrameLayout) rootView.findViewById(R.id.loading_label_popularimage_fragment);
         _messageFound = (FrameLayout) rootView.findViewById(R.id.notdata_label_popularimage_fragment);
+        _gridContainer = (LinearLayout) rootView.findViewById(R.id.grid_image_view_container);
         _gridImageView = (GridView) rootView.findViewById(R.id.grid_image_view_popularimage_fragment);
         _adapter = new GridViewAdapter(getActivity().getApplicationContext());
         _gridImageView.setAdapter(_adapter);
+        Button button = (Button) rootView.findViewById(R.id.button_create_collage_popularimage_fragment);
+        button.setOnClickListener(this);
         return rootView;
     }
 
@@ -83,6 +91,7 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
         bndl.putString(PopularImageLoader.TAG_URL, InstagramAPI.getURLMediaDataUser(_token,_userId));
         Loader<ArrayList<InstagramMediaImage>> loader = getLoaderManager().restartLoader(POPULAR_IMAGE_LOADER_ID, bndl, this);
         loader.forceLoad();
+        _gridContainer.setVisibility(View.GONE);
         _progressDialog.setVisibility(View.VISIBLE);
         _messageFound.setVisibility(View.GONE);
     }
@@ -114,6 +123,7 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
     public void onLoadFinished(Loader<ArrayList<InstagramMediaImage>> loader, ArrayList<InstagramMediaImage> data) {
         if(data!=null&&data.size()>0){
             _adapter.setArray(data);
+            _gridContainer.setVisibility(View.VISIBLE);
             _progressDialog.setVisibility(View.GONE);
             _messageFound.setVisibility(View.GONE);
         } else {
@@ -144,5 +154,29 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int count, countPick;
+        switch (v.getId()){
+            case R.id.button_create_collage_popularimage_fragment:
+                count=_adapter.getCount();
+                countPick=_adapter.getCountPickImage();
+                if(count<11) {
+                    if(count!=countPick) {
+                        Toast.makeText(getActivity(), "Select all image", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ImageListConverter.convertArrayToString(_adapter.getArray());
+                    }
+                } else {
+                    if(countPick<10) {
+                        Toast.makeText(getActivity(), "Select more image", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ImageListConverter.convertStringToArray(ImageListConverter.convertArrayToString(_adapter.getArray()));
+                    }
+                }
+                break;
+        }
     }
 }
