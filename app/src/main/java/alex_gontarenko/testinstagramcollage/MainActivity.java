@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import alex_gontarenko.testinstagramcollage.Fragments.FragmentCreateCollage;
 import alex_gontarenko.testinstagramcollage.Fragments.FragmentGetCollage;
 import alex_gontarenko.testinstagramcollage.Fragments.FragmentInstagramLogin;
 import alex_gontarenko.testinstagramcollage.Fragments.FragmentPopularImages;
@@ -89,7 +90,32 @@ public class MainActivity extends ActionBarActivity implements AuthorizationWebV
             args.putString(FragmentPopularImages.USER_ID_TAG,userId);
             fragment.setArguments(args);
             fragment.setLogoutListner(this);
+            fragment.setOnCompleteListner(new FragmentPopularImages.OnCompleteLisnter() {
+                @Override
+                public void onComplete(String imagesString) {
+                    commitFragmentCreateCollage(imagesString);
+                }
+            });
             transaction.replace(R.id.container_fragment, fragment,"FragmentPopularImage");
+        }
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void commitFragmentCreateCollage(String imagesString){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentCreateCollage fragment = (FragmentCreateCollage) manager.findFragmentByTag("FragmentCreateCollage");
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        if (fragment != null) {
+            transaction.replace(R.id.container_fragment, fragment,"FragmentCreateCollage");
+        } else {
+            fragment = new FragmentCreateCollage();
+            Bundle args = new Bundle();
+            args.putString(FragmentCreateCollage.IMAGES_TAG,imagesString);
+            fragment.setArguments(args);
+            fragment.setLogoutListner(this);
+            transaction.replace(R.id.container_fragment, fragment,"FragmentCreateCollage");
         }
         transaction.addToBackStack(null);
         transaction.commit();

@@ -37,14 +37,19 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
 
     private static final int POPULAR_IMAGE_LOADER_ID = 123;
 
-    private LogoutListner _logoutListner;
-
     private FrameLayout _progressDialog, _messageFound;
     private LinearLayout _gridContainer;
     private GridView _gridImageView;
     private GridViewAdapter _adapter;
 
     private String _token,_userId;
+
+    private LogoutListner _logoutListner;
+    private  OnCompleteLisnter _completeListner;
+
+    public interface OnCompleteLisnter    {
+        public abstract void onComplete(String imagesString);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -137,6 +142,10 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
         _logoutListner=listner;
     }
 
+    public void setOnCompleteListner(OnCompleteLisnter listner){
+        _completeListner=listner;
+    }
+
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.getcollage_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -167,13 +176,14 @@ public class FragmentPopularImages extends Fragment implements LoaderManager.Loa
                     if(count!=countPick) {
                         Toast.makeText(getActivity(), "Select all image", Toast.LENGTH_SHORT).show();
                     } else {
-                        ImageListConverter.convertArrayToString(_adapter.getArray());
+                        if(_completeListner!=null)
+                            _completeListner.onComplete(ImageListConverter.convertArrImagePickToString(_adapter.getArray()));
                     }
                 } else {
                     if(countPick<10) {
                         Toast.makeText(getActivity(), "Select more image", Toast.LENGTH_SHORT).show();
                     } else {
-                        ImageListConverter.convertStringToArray(ImageListConverter.convertArrayToString(_adapter.getArray()));
+                        _completeListner.onComplete(ImageListConverter.convertArrImagePickToString(_adapter.getArray()));
                     }
                 }
                 break;

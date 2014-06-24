@@ -4,13 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import alex_gontarenko.testinstagramcollage.Loaders.ImageLoader;
 import alex_gontarenko.testinstagramcollage.R;
 
 

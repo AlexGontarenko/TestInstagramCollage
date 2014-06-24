@@ -44,7 +44,7 @@ public class InstagramImageParcer extends InstagramDataParser<ArrayList<Instagra
                         objectJSON = arrayJSON.getJSONObject(i);
                         if(objectJSON==null||!(objectJSON.has("type"))||!(objectJSON.getString("type").equals("image")))
                             continue;
-                        likes=-1;
+                        likes=-11;
                         thumbnailImg=null;
                         image=null;
 

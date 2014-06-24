@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+    <LinearLayout
+        android:id="@+id/collage_containder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/label_email"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_email"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                android:layout_alignParentLeft="true"
+                />
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/label_email"
+                android:layout_alignBaseline="@+id/label_email"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/darker_gray"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_send_collage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:text="@string/button_sendcollage"
+            />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/notcreate_collage_label"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aaaaaaaa"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/not_create_collage"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/create_collage_processing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aaaaaaaa">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/create_collage_processing"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"/>
+
+    </FrameLayout>
+
+</FrameLayout>
