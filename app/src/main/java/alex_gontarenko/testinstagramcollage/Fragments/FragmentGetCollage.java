@@ -81,6 +81,13 @@ public class FragmentGetCollage extends Fragment implements View.OnClickListener
                 return handled;
             }
         });
+        _nicknameView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    hideKeyboard();
+            }
+        });
         _messageView = (TextView) rootView.findViewById(R.id.message_label);
         Button button = (Button) rootView.findViewById(R.id.button_get_collage);
         button.setOnClickListener(this);

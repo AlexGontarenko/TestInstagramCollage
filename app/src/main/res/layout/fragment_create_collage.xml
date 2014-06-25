@@ -26,33 +26,42 @@
 
             <TextView
                 android:id="@+id/label_email"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/label_email"
+                android:layout_margin="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="17sp"
 
                 />
             <EditText
+                android:layout_gravity="center"
                 android:id="@+id/edit_email"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
+
+                android:padding="2dp"
                 android:layout_weight="1"
-                android:background="@android:color/darker_gray"
-                android:textColor="@android:color/white"
-                android:textSize="17sp"
+                android:inputType="text"
+                android:hint=""
+                android:imeOptions="actionSend"
+                android:background="@android:color/background_light"
+                android:singleLine="true"
+                />
+            <Button
+                android:id="@+id/button_send_collage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:text="@string/button_sendcollage"
                 />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_send_collage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_gravity="center"
-            android:text="@string/button_sendcollage"
-            />
+
+
 
     </LinearLayout>
 

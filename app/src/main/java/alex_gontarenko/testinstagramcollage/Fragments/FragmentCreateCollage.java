@@ -1,10 +1,15 @@
 package alex_gontarenko.testinstagramcollage.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +25,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 import alex_gontarenko.testinstagramcollage.CollageCreator.CollageCreator;
 import alex_gontarenko.testinstagramcollage.Listners.LogoutListner;
@@ -31,6 +40,7 @@ import alex_gontarenko.testinstagramcollage.R;
 public class FragmentCreateCollage extends Fragment implements View.OnClickListener {
 
     public static final String IMAGES_TAG="FragmentCreateCollage_IMAGES_TAG";
+    private static final String LOG_TAG="FragmentCreateCollage";
 
 
     private FrameLayout _processDialog,_messageView;
@@ -77,6 +87,7 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     hideKeyboard();
+                    sendCollage();
                     handled = true;
                 }
                 return handled;
@@ -146,8 +157,54 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
         switch (v.getId()){
             case R.id.button_send_collage:
                 hideKeyboard();
+                sendCollage();
                 break;
         }
+    }
+
+    protected void sendCollage(){
+        String email = _emailView.getText().toString();
+        File file=null;
+
+        if(email.isEmpty()){
+            Toast.makeText(getActivity(), "E-mail is empty!!!", Toast.LENGTH_SHORT).show();
+        } else {
+            file = saveCollage();
+            if(file==null)
+                Toast.makeText(getActivity(), "Error!!!", Toast.LENGTH_SHORT).show();
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] {email});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Collage");
+            intent.putExtra(Intent.EXTRA_TEXT,"InstagramCollage");
+
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+
+            getActivity().startActivity(Intent.createChooser(intent, "Send e-mail..."));
+        }
+    }
+
+    private File saveCollage() {
+        // is SD mounted
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.e(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
+            return null;
+        }
+        // get SD path
+        String sdPath = Environment.getExternalStorageDirectory().toString();
+        File file = new File(sdPath,getString(R.string.collage_name));
+        FileOutputStream outputStream=null;
+        try {
+            outputStream = new FileOutputStream(file);
+            _bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.toString());
+        }
+
+        return file;
     }
 
     protected void hideKeyboard(){

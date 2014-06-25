@@ -15,7 +15,9 @@
     <string name="label_email">E-mail:</string>
     <string name="not_create_collage">Not created collage!</string>
     <string name="create_collage_processing">Processing...</string>
-    <string name="button_sendcollage">Отправить Collage</string>
+    <string name="button_sendcollage">Send</string>
+
+    <string name="collage_name">collage.jpg</string>
 
     <string name="action_settings">Settings</string>
 
