@@ -1,7 +1,7 @@
 package alex_gontarenko.testinstagramcollage.CollageCreator;
 
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.graphics.Canvas;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,13 +9,14 @@ import java.util.Comparator;
 
 import alex_gontarenko.testinstagramcollage.BaseClass.ImageListConverter;
 import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImageLikes;
+import alex_gontarenko.testinstagramcollage.Loaders.ImageLoader;
 
 /**
  * Created by Alex on 24.06.2014.
  */
 public class CollageCreator {
 
-    private static final String LOG_TAG = "CollageCreator";
+
 
     private String _arrayImage;
     private Bitmap _bitmap;
@@ -80,7 +81,7 @@ public class CollageCreator {
             if(maxHeight<height) maxHeight=(int)height;
             if(maxWidth<width) maxWidth=(int)width;
         }
-        square = Math.sqrt(1.3*square);
+        square = Math.sqrt(1.1*square);
 
         maxHeight = (int) Math.max(square,maxHeight);
         maxWidth = (int) Math.max(square,maxWidth);
@@ -136,7 +137,6 @@ public class CollageCreator {
                     }
                 }
 
-
                 if(pairList.isEmpty()){
                     pairList=null;continue;
                 }
@@ -164,7 +164,7 @@ public class CollageCreator {
                     imgH = calcParam(scaleKoef, img.getHeight(), img.getLikes(), maxLikes);
                     imgW = calcParam(scaleKoef, img.getWidth(), img.getLikes(), maxLikes);
 
-                    if (imgW <= sl.getHeight()) {
+                    if (imgW <= sl.getWidth()) {
                         resultPair.add(pair);
                         rects.remove(img);
                         vl.getListSegment().remove(sl);
@@ -172,7 +172,7 @@ public class CollageCreator {
                             x = sl.getXCoord();
                             y = sl.getYCoord() + imgH;
                             w = imgW;
-                            h = sl.getHeight() - y;
+                            h = sl.getHeight() - imgH;
                             newSl = new Segment(x, y, w, h);
                             vl.addSegment(newSl);
                         }
@@ -180,12 +180,15 @@ public class CollageCreator {
                         if (imgW < sl.getWidth()) {
                             x = sl.getXCoord() + imgW;
                             y = sl.getYCoord();
-                            w = sl.getWidth() - x;
+                            w = sl.getWidth() - imgW;
                             h = sl.getHeight();
                             newSl = new Segment(x, y, w, h);
                             newVl = new VerticalLine(newSl);
                             verticalLines.add(newVl);
                         }
+
+                        sl.setWidth(imgW);
+                        sl.setHeight(imgH);
                         if (vl.getListSegment().isEmpty())
                             verticalLines.remove(vl);
 
@@ -201,8 +204,32 @@ public class CollageCreator {
 
             if(notadd) break;
         }
-
-        //create bitmap
-
+        //CREATE BITMAP
+        if(resultPair.isEmpty()) return;
+        //calculate size
+        maxHeight=0;maxWidth=0;
+        for (i=0;i<resultPair.size();i++){
+            pair = resultPair.get(i);
+            sl = pair.getSegment();
+            h=sl.getYCoord()+sl.getHeight();
+            w=sl.getXCoord()+sl.getWidth();
+            if(maxHeight<h) maxHeight=h;
+            if(maxWidth<w) maxWidth=w;
+        }
+        //drawBitmap
+        _bitmap = Bitmap.createBitmap(maxWidth,maxHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(_bitmap);
+        //canvas.drawColor();
+        Bitmap bitmap;
+        for(i=0;i<resultPair.size();i++){
+            pair = resultPair.get(i);
+            img = pair.getImg();
+            sl = pair.getSegment();
+            bitmap = ImageLoader.downloadImage(img.getURL());
+            if(bitmap==null) break;
+            bitmap = Bitmap.createScaledBitmap(bitmap,sl.getWidth(),sl.getHeight(),false);
+            canvas.drawBitmap(bitmap,sl.getXCoord(),sl.getYCoord(),null);
+        }
+        _isCreated=true;
     }
 }

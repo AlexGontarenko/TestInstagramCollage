@@ -1,6 +1,7 @@
 package alex_gontarenko.testinstagramcollage.Fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,12 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import java.util.ArrayList;
-
-
-import alex_gontarenko.testinstagramcollage.BaseClass.ImageListConverter;
-import alex_gontarenko.testinstagramcollage.BaseClass.InstagramImageLikes;
+import alex_gontarenko.testinstagramcollage.CollageCreator.CollageCreator;
 import alex_gontarenko.testinstagramcollage.Listners.LogoutListner;
 import alex_gontarenko.testinstagramcollage.R;
 
@@ -36,15 +32,17 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
 
     public static final String IMAGES_TAG="FragmentCreateCollage_IMAGES_TAG";
 
+
     private FrameLayout _processDialog,_messageView;
     private LinearLayout _collageContainer;
     private ImageView _imageView;
     private EditText _emailView;
 
     private String _email;
-    private ArrayList<InstagramImageLikes> _arrayImage;
+    private String _arrayImage;
+    private Bitmap _bitmap;
 
-    private InstagramFindUserLoader _collageCreator =null;
+    private AsyncCollageCreator _collageCreator;
     private LogoutListner _logoutListner;
 
 
@@ -60,16 +58,17 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
             if(args.containsKey(IMAGES_TAG))
                 str=args.getString(IMAGES_TAG);
         }
-        _arrayImage = ImageListConverter.convertStringToArray(str);
+        _arrayImage = str;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_collage, container, false);
-        _processDialog = (FrameLayout) rootView.findViewById(R.id.notcreate_collage_label);
-        _messageView = (FrameLayout) rootView.findViewById(R.id.create_collage_processing);
+        _processDialog = (FrameLayout) rootView.findViewById(R.id.create_collage_processing);
+        _messageView = (FrameLayout) rootView.findViewById(R.id.notcreate_collage_label);
         _collageContainer = (LinearLayout) rootView.findViewById(R.id.collage_containder);
+        _imageView = (ImageView) rootView.findViewById(R.id.collage_image);
         _emailView = (EditText) rootView.findViewById(R.id.edit_email);
 
         _emailView.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -89,6 +88,19 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        _messageView.setVisibility(View.GONE);
+        _collageContainer.setVisibility(View.GONE);
+        _processDialog.setVisibility(View.VISIBLE);
+        if(_collageCreator !=null)
+            _collageCreator.cancel(true);
+        _collageCreator = new AsyncCollageCreator();
+        _collageCreator.execute();
+
+    }
+
+    @Override
     public void onPause(){
         super.onPause();
         if(_collageCreator !=null)
@@ -98,16 +110,12 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        _messageView.setVisibility(View.GONE);
-        _collageContainer.setVisibility(View.GONE);
-        _processDialog.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        String str = ImageListConverter.convertArrayToString(_arrayImage);
-        outState.putString(IMAGES_TAG,str);
+        outState.putString(IMAGES_TAG,_arrayImage);
     }
 
     public void setLogoutListner(LogoutListner listner){
@@ -148,19 +156,30 @@ public class FragmentCreateCollage extends Fragment implements View.OnClickListe
         imm.hideSoftInputFromWindow(_emailView.getWindowToken(),0);
     }
 
-    public class InstagramFindUserLoader extends AsyncTask<String, Void, String> {
+    public class AsyncCollageCreator extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected String doInBackground(String... params) {
-
+        protected Void doInBackground(Void... params) {
+            CollageCreator creator = new CollageCreator(_arrayImage);
+            creator.createCollage();
+            if(creator.isCreatedCollage())
+                _bitmap = creator.getCollage();
+            else
+            _bitmap = null;
             return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             if(!isCancelled()){
-
+                _processDialog.setVisibility(View.GONE);
+                if(_bitmap!=null){
+                    _collageContainer.setVisibility(View.VISIBLE);
+                    _imageView.setImageBitmap(_bitmap);
+                } else {
+                    _messageView.setVisibility(View.VISIBLE);
+                }
             }
         }
 

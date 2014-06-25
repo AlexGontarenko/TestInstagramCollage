@@ -9,17 +9,20 @@
         android:layout_height="match_parent"
         android:background="@android:color/black"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:id="@+id/collage_image"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:scaleType="fitCenter"/>
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/label_email"
@@ -28,21 +31,19 @@
                 android:text="@string/label_email"
                 android:textColor="@android:color/white"
                 android:textSize="17sp"
-                android:layout_alignParentLeft="true"
+
                 />
             <EditText
                 android:id="@+id/edit_email"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/label_email"
-                android:layout_alignBaseline="@+id/label_email"
-                android:layout_alignParentRight="true"
+                android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:textColor="@android:color/white"
                 android:textSize="17sp"
                 />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_send_collage"
@@ -76,7 +77,8 @@
         android:id="@+id/create_collage_processing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#aaaaaaaa">
+        android:background="#aaaaaaaa"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
